@@ -57,6 +57,10 @@ INSTALLED_APPS = [
     'draw',
     'accounts',
     'manager',
+    'club',
+    'board',
+    'workspace',
+    'main',
     
     # allauth
     'allauth',

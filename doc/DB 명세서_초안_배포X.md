@@ -1,0 +1,159 @@
+## DB 명세서_초안\_배포X
+
+> - 대략적으로 작성했기 때문에 문법적인 오류가 있을 가능성이 높습니다.
+> -  prototype 용도로 작성한 문서이므로 구현하는 사람이 필요에 따라 수정하고 수정내용은 기록하도록 합니다.
+> - 필요없는 컬럼은 삭제해야합니다. 복사붙여넣기 과정에서 섞여들어갔을 수 있습니다.
+> - 대략적인 이미지이므로 참고만 바랍니다.
+
+![](.\KHUA_20201002_50_44.png)
+
+### 1. board (학과게시판)
+
+>- 참조 : https://github.com/Baek-SeungJae/Django/tree/master/Django/mysite/articles
+>
+>```python
+>from django.db import models
+>from django.conf import settings
+>from imagekit.models import ImageSpecField
+>from imagekit.processors import Thumbnail
+>```
+>
+>```python
+>class Article(models.Model):
+>	title = models.CharField(max_length=150)
+>	content = models.TextField()
+>	comment_count = models.IntegerField(default=0)
+>	created_at = models.DateTimeField(auto_now_add=True)
+>	updated_at = models.DateTimeField(auto_now=True)
+>	user = models.ForeignKey(settings.AUTH_USER_MODEL,
+>							 on_delete=models.CASCADE)
+>	image = models.ImageField(blank=True, upload_to="%Y/%M/%d/")
+>	image_thumbnail = ImageSpecField(
+>		source='image',
+>		processors=[Thumbnail(200, 300)],
+>		format='JPEG',
+>		options={'quality': 90}
+>	)
+>	like_users = models.ManyToManyField(
+>		settings.AUTH_USER_MODEL,
+>		related_name='like_articles',
+>		blank=True)
+>    
+>class Comment(models.Model):
+>	article = models.ForeignKey(Article, on_delete=models.CASCADE)
+>	user = models.ForeignKey(settings.AUTH_USER_MODEL,
+>							 on_delete=models.CASCADE)
+>	content = models.CharField(max_length=200)
+>	created_at = models.DateTimeField(auto_now_add=True)
+>
+>class Schedule:
+>	# 스케줄에 대한 구현 필요, 안해본 내용이라서 어떤식으로 구현할지 고민해봐야함
+>```
+>
+>
+
+### 2. accounts (사용자)
+
+> - Profile에 구현하고 user에 1:1로 연결
+>
+> ```python
+> class Profile(models.Model):
+> 	user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+> 	student_no = models.CharField(max_length=10, blank =False)
+> 	permission = models.CharField(max_length=10, default='일반')
+> ```
+>
+> 
+
+### 3. Workspace (작업실)
+
+>- 빠뜨린게 많은 것 같은데 뭘 빠뜨렸을까요...? 의견있으시면 말씀해주세요
+>
+>``` python
+># Workspace는 CRUD 모두 구현할 필요 없음 관리자 화면에서 추가하면 됨 회장넘기는 기능만 구현
+>class Workspace:
+>	name = models.CharField(max_length=10, blank =False)
+>	# ManyToManyField가 아닙니다. 정확한 문법을 몰라서 이렇게 표기했는데 1:N 구조로 가야합니다.
+>	members = models.ManyToManyField(
+>		settings.AUTH_USER_MODEL,
+>		related_name='workspace_members',
+>		blank=True)
+>	president = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True)
+>    
+># 일반게시판과 다름에 주의
+>class Article(models.Model):
+>	workspace = models.ForeignKey(Workspace, on_delete=models.CASCADE)
+>	title = models.CharField(max_length=150)
+>	content = models.TextField()
+>	comment_count = models.IntegerField(default=0)
+>	created_at = models.DateTimeField(auto_now_add=True)
+>	updated_at = models.DateTimeField(auto_now=True)
+>	user = models.ForeignKey(settings.AUTH_USER_MODEL,
+>							 on_delete=models.CASCADE)
+>	image = models.ImageField(blank=True, upload_to="%Y/%M/%d/")
+>	image_thumbnail = ImageSpecField(
+>		source='image',
+>		processors=[Thumbnail(200, 300)],
+>		format='JPEG',
+>		options={'quality': 90}
+>	)
+>	like_users = models.ManyToManyField(
+>		settings.AUTH_USER_MODEL,
+>		related_name='like_articles',
+>		blank=True)
+>
+>class Comment(models.Model):
+>	article = models.ForeignKey(Article, on_delete=models.CASCADE)
+>	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+>	content = models.CharField(max_length=200)
+>	created_at = models.DateTimeField(auto_now_add=True)
+>```
+>
+>
+
+### 4. Club (동아리)
+
+>- Workspace와 구조적으로 유사한데, 1:N, M:N인 것만 유의
+>
+>```python
+># Club는 CRUD 모두 구현할 필요 없음 관리자 화면에서 추가하면 됨 회장넘기는 기능만 구현
+>class Club:
+>	name = models.CharField(max_length=10, blank =False)
+>	/*추가적으로 더 필요할 내용이 있을거같은데 생각이 안나네요 */
+>	members = models.ManyToManyField(
+>		settings.AUTH_USER_MODEL,
+>		related_name='club_members',
+>		blank=True)
+>	president = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True)
+># 일반게시판과 다름에 주의
+>class Article(models.Model):
+>	club = models.ForeignKey(Club, on_delete=models.CASCADE)
+>	title = models.CharField(max_length=150)
+>	content = models.TextField()
+>	comment_count = models.IntegerField(default=0)
+>	created_at = models.DateTimeField(auto_now_add=True)
+>	updated_at = models.DateTimeField(auto_now=True)
+>	user = models.ForeignKey(settings.AUTH_USER_MODEL,
+>							 on_delete=models.CASCADE)
+>	image = models.ImageField(blank=True, upload_to="%Y/%M/%d/")
+>	image_thumbnail = ImageSpecField(
+>		source='image',
+>		processors=[Thumbnail(200, 300)],
+>		format='JPEG',
+>		options={'quality': 90}
+>	)
+>	like_users = models.ManyToManyField(
+>		settings.AUTH_USER_MODEL,
+>		related_name='like_articles',
+>		blank=True)
+>
+>class Comment(models.Model):
+>	article = models.ForeignKey(Article, on_delete=models.CASCADE)
+>	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+>	content = models.CharField(max_length=200)
+>	created_at = models.DateTimeField(auto_now_add=True)
+>```
+>
+>
+>
+>
