@@ -12,7 +12,7 @@ class CustomUserAdmin(UserAdmin):
     inlines = (ProfileInline,)
 
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'student_no')
+    list_display = ('user', 'student_no','permission')
     model = Profile
     con_delete = False
 

@@ -5,16 +5,24 @@ from .form import ArticleForm, CommentForm
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-# Create your views here.
+
+# 학과 게시판
+# C - 학과사람
+# R - 누구나
+# U - 학과사람
+# D - 본인 or 학생회장
+
+# 04. 구현하면서 생각한 내용들.md 파일에 기록한 것들을 적용하면서 진행
 
 
 def index(request):
     # 게시물 불러와서 댓글수 카운트
     articles = Article.objects.all()
-    for i in range(len(articles)):
-        articles[i].comment_count = len(
-            Comment.objects.filter(article=articles[i]))
 
+    # 쿼리 호출 됨
+    for i in range(len(articles)):
+        articles[i].comment_count = len(Comment.objects.filter(article=articles[i]))
+    
     # 페이징처리
     articles = Paginator(articles, 20)
     page = request.GET.get('page')
