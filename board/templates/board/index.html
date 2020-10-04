@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset='utf-8'>
   <title>Page Title</title>
@@ -9,5 +10,43 @@
 
 <body>
   <h1>board/index.html</h1>
+
+  <table class="table" style="font-size: 1vmax">
+    <thead>
+      <tr>
+        <th width="5%" style="text-align: center">#</th>
+        <th width="45%">제목</th>
+        <th width="15%" style="text-align: center">작성자</th>
+        <th width="15%" style="text-align: center">작성일</th>
+        <th width="10%" style="text-align: center">조회수</th>
+        <th width="10%" style="text-align: center">좋아요</th>
+      </tr>
+    </thead>
+
+    <tbody id="mydatalist">
+      {% for article in articles %}
+      <tr align="center" style="border-bottom: 1px solid #a8afad;">
+        <td>{{ article.pk }}</td>
+        <td align="left"><a class="text-dark" href="{% url 'board:detail' article.id %}"
+            style="text-decoration: none;">{{ article.title }} <b
+              style="color: red;">[{{  article.comment_set.all|length }}]</b></a>
+        </td>
+        {% if article.user.profile.nickname %}
+        <td><a class="text-dark" href="javascript:profile('{{article.user}}')"
+            style="text-decoration: none;">{{ article.user.profile.nickname }}</a></td>
+        {% else %}
+        <td><a class="text-dark" href="javascript:profile('{{article.user}}')"
+          style="text-decoration: none;">{{ article.user }}</a></td>
+        {% endif %}
+        <td>{{ article.updated_at|date:'Y/n/j' }}</td>
+        <td>{{ article.hits }}</td>
+        <td>{{ article.like_users.all|length }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+
+  </table>
+  
 </body>
+
 </html>

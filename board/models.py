@@ -12,7 +12,6 @@ class Article(models.Model):
     title = models.CharField(max_length=150)
     category = models.CharField(max_length=20)
     content = models.TextField()
-    comment_count = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL,

@@ -1,0 +1,32 @@
+{% load bootstrap4 %}
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8'>
+  <title>Page Title</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+</head>
+
+
+<body>
+  <h1>board/form.html</h1>
+
+  {% if request.resolver_match.url_name == 'create' %}
+  <h1>글 생성</h1>
+  {% elif request.resolver_match.url_name == 'update' %}
+  <h1>글 수정</h1>
+  {% endif %}
+
+  <form action="" method="post" class="form">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% buttons %}
+      <button type="submit" class="btn btn-primary">
+        Submit
+      </button>
+    {% endbuttons %}
+  </form>
+</body>
+
+</html>
