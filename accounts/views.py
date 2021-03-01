@@ -19,10 +19,12 @@ from django.db.models import Q
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from allauth.account.views import SignupView
 
+
 # Create your views here.
 
 def index(request):
     return redirect('accounts:login')
+
 
 def signup(request):
     if request.user.is_authenticated:
@@ -46,6 +48,7 @@ def signup(request):
         }
     return render(request, 'accounts/signup.html', context)
 
+
 def login(request):
     if request.user.is_authenticated:
         return redirect('draw:index')
@@ -65,22 +68,24 @@ def login(request):
         }
     return render(request, 'accounts/login.html', context)
 
+
 def logout(request):
     auth_logout(request)
     return redirect('accounts:index')
 
+
 def profile(request, username):
-    #회원 프로필보기 화면인데 현재 미구현
+    # 회원 프로필보기 화면인데 현재 미구현
     context = {
     }
     return render(request, 'accounts/profile.html', context)
-
 
 
 @login_required
 def delete(request):
     request.user.delete()
     return redirect('accounts:index')
+
 
 @login_required
 def update(request):
@@ -89,24 +94,24 @@ def update(request):
         profile = request.user.profile
         if request.method == 'POST':
             form = CustomUserChangeForm(request.POST, instance=request.user)
-            #p_form = PasswordChangeForm(request.user, request.POST)
+            # p_form = PasswordChangeForm(request.user, request.POST)
             p_form = ProfileForm(request.POST, instance=profile)
             if form.is_valid() and p_form.is_valid():
                 p = p_form.save(commit=False)
                 p.student_no = request.POST.get('student_no')
                 form.save()
                 p.save()
-                #user = p_form.save()
-                #update_session_auth_hash(request, user)
+                # user = p_form.save()
+                # update_session_auth_hash(request, user)
                 messages.success(request, '개인정보 수정 완료')
                 return redirect('accounts:index')
             else:
                 messages.success(request, '개인정보 수정 실패')
         else:
-            
+
             form = CustomUserChangeForm(instance=request.user)
             p_form = ProfileForm(instance=request.user.profile)
-            #p_form = PasswordChangeForm(request.user, request.POST)
+            # p_form = PasswordChangeForm(request.user, request.POST)
     context = {
         'form': form,
         'p_form': p_form
