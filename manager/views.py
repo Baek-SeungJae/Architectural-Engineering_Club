@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from accounts.models import Profile
 from draw.models import Draw
 from django.contrib.auth.decorators import login_required
-from .Club_Select_Algorithm import Club_Select_Algorithm
+from manager.service.Club_Select_Algorithm import Club_Select_Algorithm
 import csv
 # Create your views here.
 

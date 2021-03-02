@@ -98,7 +98,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'Architectural_Engineering.wsgi.application'
+# WSGI_APPLICATION = 'Architectural_Engineering.wsgi.application'
 
 
 # Database

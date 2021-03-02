@@ -30,7 +30,6 @@ def index(request):
 @login_required
 def choose_club(request):
     if request.method == "POST":
-        print("POST")
         user = Profile.objects.get(user=request.user).user
         user.username = request.POST.get("id")
         user.save()
@@ -41,7 +40,6 @@ def choose_club(request):
         profile.save()
         student_no = profile.student_no
     else:
-        print("GET")
         user = Profile.objects.get(user=request.user).user
         name = user.username
         profile = Profile.objects.get(user=request.user)

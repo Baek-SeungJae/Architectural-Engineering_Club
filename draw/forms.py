@@ -3,15 +3,14 @@ from .models import Draw
 
 
 DRAW_CHOICES = [
-    ('팀엑스', '팀엑스'),
-    ('공간과장소', '공간과장소'),
-    ('뮤', '뮤'),
-    ('소프', '소프'),
-    ('아키', '아키'),
-    ('작은공간', '작은공간'),
-    ('비작업실', '비작업실')
+    ('Team_X', 'Team_X'),
+    ('Space_Place', 'Space_Place'),
+    ('Mu', 'Mu'),
+    ('Sof', 'Sof'),
+    ('Arch', 'Arch'),
+    ('Small_Space', 'Small_Space'),
+    ('Nothing', 'Nothing')
 ]
-
 
 class DrawForm(forms.ModelForm):
     class Meta:
